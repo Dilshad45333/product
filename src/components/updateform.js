@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './ProductForm.css';
+import toast from 'react-hot-toast';
 
-const EditUpdateForm=({product,onClose,onUpdate})=>{
+const EditUpdateForm=()=>{
+    const navigate=useNavigate()
+    const location = useLocation();
+      const  {state}  = location;
+      console.log('state',state)
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -10,12 +17,12 @@ const EditUpdateForm=({product,onClose,onUpdate})=>{
 
     useEffect(()=>{
         setFormData({
-            name:product.name,
-            description:product.description,
-            price:product.price,
+            name:state.name,
+            description:state.description,
+            price:state.price,
             image:" "
         });
-    },[product])
+    },[state])
 
    const handleChange=(e)=>{
     const {name,value}=e.target
@@ -25,35 +32,40 @@ const EditUpdateForm=({product,onClose,onUpdate})=>{
     }));
 
    }
-
+ 
+   const onClose=()=>{
+    navigate('/list')
+   }
    const handleSubmit=async(e)=>{
     e.preventDefault();
 
      try{
-         const res=await fetch(`http://localhost:5000/update/${product.id}`,{
+         const res=await fetch(`http://localhost:5000/update/${state.id}`,{
             method:'PUT',
             headers:{
                 'Content-Type':'application/json'
             },
             body:JSON.stringify(formData)
           })
+          toast.success("Successfully updated!");
 
           if(!res.ok){
              throw new Error('Failed to update product');
           }
 
-          onUpdate();
+          //onUpdate();
 
      }catch(error){
         console.error('Error updating product',error)
+        toast.error(error)
      }
    }
 
     return(
-        <div>
+        <div className="product-form">
             <h2>Edit Product</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
+            <form onSubmit={handleSubmit} >
+                <div className="form-group">
                     <label>
                         Name:
                         <input
@@ -64,7 +76,7 @@ const EditUpdateForm=({product,onClose,onUpdate})=>{
                         />
                     </label>
                 </div>
-                <div>
+                <div className="form-group">
                     <label>
                         Description:
                         <input
@@ -75,7 +87,7 @@ const EditUpdateForm=({product,onClose,onUpdate})=>{
                         />
                     </label>
                 </div>
-                <div>
+                <div className="form-group">
                     <label>
                         Price:
                         <input
@@ -86,8 +98,10 @@ const EditUpdateForm=({product,onClose,onUpdate})=>{
                         />
                     </label>
                 </div>
-                <button type="submit">Update Product</button>
-                <button type="button" onClick={onClose}>Cancel</button>
+                <div className='btn'>
+                <button type="submit" className='advanced-button'>Update Product</button>
+                <button type="button" onClick={onClose} className='advanced-button'>Cancel</button>
+                </div>
             </form>
         </div>
     )

@@ -9,7 +9,6 @@ import ButtonCellRenderer from "./ButtonCellRenderer";
 const ProductList = () => {
   
   const [products, setProducts] = useState([]);
-  const [editingProduct, setEditingProduct] = useState(null);
   const [rowData, setRowData] = useState([]);
  
   const fetchProducts = async () => {
@@ -45,53 +44,10 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  
-
-  const handleDelete = async (id) => {
-    try {
-      const res = await fetch(`http://localhost:5000/delete/${id}`, {
-        method: "DELETE",
-      });
-      console.log("list :", res);
-      setProducts(products.filter((product) => product.id !== id));
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
-  };
-
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-  };
-
-  
-  
-
  
-
   return (
     <div>
-      {/* <h1>Product List</h1>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            {product.name} - {product.description} - ${product.price}
-            <button onClick={() => handleEdit(product)}>Edit</button>
-            <button onClick={() => handleDelete(product.id)}>Delete</button>
-          </li>
-        ))}
-      </ul> */}
-      {editingProduct && (
-        <EditProductForm
-          product={editingProduct}
-          onClose={() => setEditingProduct(null)}
-          onUpdate={() => {
-            // Refresh product list after update
-            setEditingProduct(null);
-            fetchProducts();
-          }}
-        />
-      )}
-
+    
       <div className="ag-theme-quartz" style={{ height: 500 }}>
         <AgGridReact
           rowData={rowData}

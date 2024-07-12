@@ -98,3 +98,9 @@
   .advanced-button:focus {
     outline: none;
   }
+
+  .btn{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }

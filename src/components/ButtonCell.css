@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    gap: 10px; /* Adjust the gap size as needed */
+    font-size: 24px;
+  }
+
+ 
+  .item {
+   
+    /* padding: 10px; */
+    flex: 1 1 30%; /* Allow items to grow and shrink, with a base width of 30% */
+    min-width: 10px; /* Minimum width to maintain item size */
+    box-sizing: border-box;
+    
+  }
+
+  @media (max-width: 600px) {
+    .item {
+      flex: 1 1 100%; /* Take full width on small screens */
+    }
+  }

@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import './ProductForm.css';
+import toast, { Toaster } from 'react-hot-toast';
+
 const ProductForm = ({ onAddProduct }) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState(null);
+    const [isFormValid,setIsFormValid]=useState(false);
+    
+    const validateForm = useCallback(() => {
+        const isNameValid = name.trim() !== '';
+        const isDescriptionValid = description.trim() !== '';
+        const isPriceValid = price.trim() !== '';
+        const isImageValid = image !== null;
+
+        setIsFormValid(isNameValid && isDescriptionValid && isPriceValid && isImageValid);
+    }, [name, description, price, image]);
+
+    useEffect(() => {
+        validateForm();
+    }, [name, description, price, image, validateForm]);
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,17 +39,21 @@ const ProductForm = ({ onAddProduct }) => {
             setDescription('');
             setPrice('');
             setImage('');
+            toast.success('Successfully added!');
+           
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         console.log('file:',file)
         if (file && file.type === 'image/png') {
-            setImage(file.name);
+            setImage(file);
         } else {
             alert('Please select a PNG file.');
         }
     };
+
+   
 
     return (
         <form onSubmit={handleSubmit} className="product-form">
@@ -52,8 +73,8 @@ const ProductForm = ({ onAddProduct }) => {
                 <label>Image:</label>
                 <input type="file"  onChange={handleImageChange} required accept=".png"  alt="Submit" width="48" height="48" />
             </div>
-            <button type="submit" className='advanced-button'>Add Product</button>
-            
+            <button type="submit" className='advanced-button' disabled={!isFormValid}>Add Product</button>
+            <Toaster position="top-right" />
         </form>
         
     );
